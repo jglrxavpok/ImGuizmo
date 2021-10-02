@@ -2605,7 +2605,7 @@ namespace IMGUIZMO_NAMESPACE
       _freea(faces);
    }
 
-   void DrawGrid(const float* view, const float* projection, const float* matrix, const float gridSize)
+   void DrawGrid(const float* view, const float* projection, const float* matrix, const float gridSize, bool zUp)
    {
       matrix_t viewProjection = *(matrix_t*)view * *(matrix_t*)projection;
       vec_t frustum[6];
@@ -2616,8 +2616,18 @@ namespace IMGUIZMO_NAMESPACE
       {
          for (int dir = 0; dir < 2; dir++)
          {
-            vec_t ptA = makeVect(dir ? -gridSize : f, 0.f, dir ? f : -gridSize);
-            vec_t ptB = makeVect(dir ? gridSize : f, 0.f, dir ? f : gridSize);
+            vec_t ptA;
+            vec_t ptB;
+            if(!zUp)
+            {
+              ptA = makeVect(dir ? -gridSize : f, 0.f, dir ? f : -gridSize);
+              ptB = makeVect(dir ? gridSize : f, 0.f, dir ? f : gridSize);
+            }
+            else
+            {
+              ptA = makeVect(dir ? -gridSize : f, dir ? f : -gridSize, 0.f);
+              ptB = makeVect(dir ? gridSize : f, dir ? f : gridSize, 0.f);
+            }
             bool visible = true;
             for (int i = 0; i < 6; i++)
             {
